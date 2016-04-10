@@ -273,7 +273,7 @@ private extension BSON {
 				
                 bson_iter_binary(&iterator, &subtype, &length, bufferPointer)
                 
-				var bytes: [UInt8] = [UInt8](repeating: 0, count: Int(length))
+                var bytes: [UInt8] = [UInt8](repeating: 0, count: Int(length))
                 
                 memcpy(&bytes, bufferPointer.pointee, Int(length))
                 
@@ -366,7 +366,7 @@ private extension BSON {
                 
                 let scopeBuffer = UnsafeMutablePointer<UnsafePointer<UInt8>>(allocatingCapacity:1)
                 
-                defer { scopeBuffer.deinitialize(); /*scopeBuffer.deallocCapacity(1) */ }
+				defer { scopeBuffer.deinitialize(); /*scopeBuffer.deallocCapacity(1) */ }
                 
                 let buffer = bson_iter_codewscope(&iterator, &codeLength, &scopeLength, scopeBuffer)
                 

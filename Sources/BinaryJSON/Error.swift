@@ -39,7 +39,7 @@ public extension BSON {
             
             let message = withUnsafePointer(&messageTuple) { (unsafeTuplePointer) -> String in
                 
-				let charPointer = unsafeBitCast(_: unsafeTuplePointer, to: UnsafePointer<CChar>.self)
+                let charPointer = unsafeBitCast(_: unsafeTuplePointer, to: UnsafePointer<CChar>.self)
                 
 				let string = String(cString:charPointer)
                 
