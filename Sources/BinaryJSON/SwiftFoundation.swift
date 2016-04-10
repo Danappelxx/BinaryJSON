@@ -86,7 +86,7 @@ public extension tm {
         
         let timePointer = gmtime(&seconds)
         
-        self = timePointer.memory
+        self = timePointer.pointee
     }
 }
 

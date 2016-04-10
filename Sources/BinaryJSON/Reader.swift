@@ -10,7 +10,7 @@ import CBSON
 
 public extension BSON {
     
-    public final class Reader: IteratorType {
+    public final class Reader: IteratorProtocol {
         
         // MARK: - Private Properties
         
@@ -64,9 +64,9 @@ public extension Data {
     /// - Precondition: The pointer  points to a type exactly a byte long.
     static func fromBytePointer<T: Any>(pointer: UnsafePointer<T>, length: Int) -> Data {
         
-        assert(sizeof(pointer.memory.dynamicType) == sizeof(Byte.self), "Cannot create array of bytes from pointer to \(pointer.memory.dynamicType) because the type is larger than a single byte.")
+        assert(sizeof(pointer.pointee.dynamicType) == sizeof(Byte.self), "Cannot create array of bytes from pointer to \(pointer.pointee.dynamicType) because the type is larger than a single byte.")
         
-        var buffer: [UInt8] = [UInt8](count: length, repeatedValue: 0)
+        var buffer: [UInt8] = [UInt8](repeating: 0, count: length)
         
         memcpy(&buffer, pointer, length)
         

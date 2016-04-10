@@ -32,7 +32,7 @@ public extension BSON {
         
         defer { bson_free(stringBuffer) }
         
-        let string = String.fromCString(stringBuffer)!
+        let string = String(cString:stringBuffer)
         
         return string
     }

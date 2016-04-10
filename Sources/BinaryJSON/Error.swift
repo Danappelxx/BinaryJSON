@@ -35,21 +35,20 @@ public extension BSON {
             
             assert(unsafePointer != nil, "Trying to create Error from nil pointer")
             
-            var messageTuple = unsafePointer.memory.message
+            var messageTuple = unsafePointer.pointee.message
             
             let message = withUnsafePointer(&messageTuple) { (unsafeTuplePointer) -> String in
                 
-                let charPointer = unsafeBitCast(unsafeTuplePointer, UnsafePointer<CChar>.self)
+				let charPointer = unsafeBitCast(_: unsafeTuplePointer, to: UnsafePointer<CChar>.self)
                 
-                guard let string = String.fromCString(charPointer)
-                    else { fatalError("Could not create string ") }
+				let string = String(cString:charPointer)
                 
                 return string
             }
             
-            self.domain = unsafePointer.memory.domain
+            self.domain = unsafePointer.pointee.domain
             self.message = message
-            self.code = unsafePointer.memory.code
+            self.code = unsafePointer.pointee.code
         }
     }
 }

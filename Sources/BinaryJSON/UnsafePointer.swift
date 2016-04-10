@@ -193,7 +193,7 @@ private extension BSON {
             guard bson_append_array_begin(documentPointer, key, keyLength, childPointer)
                 else { return false }
             
-            for (index, subvalue) in array.enumerate() {
+            for (index, subvalue) in array.enumerated() {
                 
                 let indexKey = "\(index)"
                 
@@ -213,9 +213,8 @@ private extension BSON {
             // key char buffer should not be changed or freed
             let keyBuffer = bson_iter_key_unsafe(&iterator)
             
-            guard let key = String.fromCString(keyBuffer)
-                else { fatalError("Invalid key C string") }
-            
+            let key = String(cString:keyBuffer)
+			
             let type = bson_iter_type_unsafe(&iterator)
             
             var value: BSON.Value?
@@ -234,9 +233,8 @@ private extension BSON {
                 
                 let buffer = bson_iter_utf8_unsafe(&iterator, &length)
                 
-                guard let string = String.fromCString(buffer)
-                    else { fatalError("Invalid C string") }
-                
+                let string = String(cString:buffer)
+				
                 value = .String(string)
                 
             case BSON_TYPE_DOCUMENT:
@@ -271,15 +269,13 @@ private extension BSON {
                 
                 var length: UInt32 = 0
                 
-                let bufferPointer = UnsafeMutablePointer<UnsafePointer<UInt8>>.alloc(1)
-                
-                defer { bufferPointer.dealloc(1) }
-                
+                let bufferPointer = UnsafeMutablePointer<UnsafePointer<UInt8>>(allocatingCapacity:1)
+				
                 bson_iter_binary(&iterator, &subtype, &length, bufferPointer)
                 
-                var bytes: [UInt8] = [UInt8](count: Int(length), repeatedValue: 0)
+				var bytes: [UInt8] = [UInt8](repeating: 0, count: Int(length))
                 
-                memcpy(&bytes, bufferPointer.memory, Int(length))
+                memcpy(&bytes, bufferPointer.pointee, Int(length))
                 
                 let data = Data(byteValue: bytes)
                 
@@ -310,7 +306,7 @@ private extension BSON {
                 /// should not be freed
                 let oidPointer = bson_iter_oid_unsafe(&iterator)
                 
-                let objectID = ObjectID(byteValue: oidPointer.memory.bytes)
+                let objectID = ObjectID(byteValue: oidPointer.pointee.bytes)
                 
                 value = .ObjectID(objectID)
                 
@@ -336,17 +332,15 @@ private extension BSON {
                 
             case BSON_TYPE_REGEX:
                 
-                let optionsBufferPointer = UnsafeMutablePointer<UnsafePointer<CChar>>.alloc(1)
-                
-                defer { optionsBufferPointer.dealloc(1) }
-                
+                let optionsBufferPointer = UnsafeMutablePointer<UnsafePointer<CChar>>(allocatingCapacity:1)
+				
                 let patternBuffer = bson_iter_regex(&iterator, optionsBufferPointer)
                 
-                let optionsBuffer = optionsBufferPointer.memory
+                let optionsBuffer = optionsBufferPointer.pointee
                 
-                let options = String.fromCString(optionsBuffer)!
+                let options = String(cString:optionsBuffer)
                 
-                let pattern = String.fromCString(patternBuffer)!
+                let pattern = String(cString:patternBuffer)
                 
                 let regex = RegularExpression(pattern, options: options)
                 
@@ -358,7 +352,7 @@ private extension BSON {
                 
                 let buffer = bson_iter_code_unsafe(&iterator, &length)
                 
-                let codeString = String.fromCString(buffer)!
+                let codeString = String(cString:buffer)
                 
                 let code = Code(codeString)
                 
@@ -370,17 +364,17 @@ private extension BSON {
                 
                 var scopeLength: UInt32 = 0
                 
-                let scopeBuffer = UnsafeMutablePointer<UnsafePointer<UInt8>>.alloc(1)
+                let scopeBuffer = UnsafeMutablePointer<UnsafePointer<UInt8>>(allocatingCapacity:1)
                 
-                defer { scopeBuffer.destroy(); scopeBuffer.dealloc(1) }
+                defer { scopeBuffer.deinitialize(); /*scopeBuffer.deallocCapacity(1) */ }
                 
                 let buffer = bson_iter_codewscope(&iterator, &codeLength, &scopeLength, scopeBuffer)
                 
-                let codeString = String.fromCString(buffer)!
+                let codeString = String(cString:buffer)
                 
                 var scopeBSON = bson_t()
                 
-                guard bson_init_static(&scopeBSON, scopeBuffer.memory, Int(scopeLength))
+                guard bson_init_static(&scopeBSON, scopeBuffer.pointee, Int(scopeLength))
                     else { return false }
                 
                 guard let scopeDocument = documentFromUnsafePointer(&scopeBSON)
