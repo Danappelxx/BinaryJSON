@@ -366,7 +366,7 @@ private extension BSON {
                 
                 let scopeBuffer = UnsafeMutablePointer<UnsafePointer<UInt8>>(allocatingCapacity:1)
                 
-                defer { scopeBuffer.deinitialize(); /*scopeBuffer.deallocCapacity(1) */ }
+                defer { scopeBuffer.deinitialize(); scopeBuffer.deallocateCapacity(1) }
                 
                 let buffer = bson_iter_codewscope(&iterator, &codeLength, &scopeLength, scopeBuffer)
                 
