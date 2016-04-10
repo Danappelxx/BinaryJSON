@@ -206,7 +206,7 @@ private extension BSON {
     }
     
     /// iterate and append values to document
-    static func iterate(inout document: BSON.Document, inout iterator: bson_iter_t) -> Bool {
+    static func iterate( document: inout BSON.Document, iterator: inout bson_iter_t) -> Bool {
         
         while bson_iter_next(&iterator) {
             
