@@ -20,7 +20,7 @@ public extension timeval {
         
         guard gettimeofday(&timeStamp, nil) == 0 else {
             
-            if let error = POSIXError.fromErrorNumber as? ErrorType {
+            if let error = POSIXError.fromErrorNumber as? ErrorProtocol {
                 throw error
             } else {
                 fatalError("Make an issue if this hits - fixing this is a TODO but I may forget")
@@ -99,7 +99,7 @@ public extension POSIXError {
 #if os(Linux)
     
     /// Enumeration describing POSIX error codes.
-    public enum POSIXError: ErrorType, RawRepresentable {
+    public enum POSIXError: ErrorProtocol, RawRepresentable {
         
         case Value(CInt)
         

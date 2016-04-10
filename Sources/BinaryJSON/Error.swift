@@ -17,7 +17,7 @@ import CBSON
 public extension BSON {
     
     // BSON Error
-    public struct Error: ErrorType {
+    public struct Error: ErrorProtocol {
         
         /// The internal library domain of the error.
         let domain: UInt32

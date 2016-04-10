@@ -105,7 +105,7 @@ extension Bool: BSONDecodable {
 
 // MARK: Encodable
 
-public extension Collection where Generator.Element: BSONEncodable {
+public extension Collection where Iterator.Element: BSONEncodable {
     
     func toBSON() -> BSON.Value {
         

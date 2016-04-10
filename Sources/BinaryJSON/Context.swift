@@ -95,19 +95,19 @@ public protocol BitMaskOption: RawRepresentable {
 
 public extension BitMaskOption where Self.RawValue: Integer {
     
-    static func optionsBitmask<S: Sequence where S.Generator.Element == Self>(options: S) -> Self.RawValue {
+    static func optionsBitmask<S: Sequence where S.Iterator.Element == Self>(options: S) -> Self.RawValue {
         return options.reduce(0) { mask, option in
             mask | option.rawValue
         }
     }
 }
 
-public extension Sequence where Self.Generator.Element: BitMaskOption, Self.Generator.Element.RawValue: Integer {
+public extension Sequence where Self.Iterator.Element: BitMaskOption, Self.Iterator.Element.RawValue: Integer {
     
-    func optionsBitmask() -> Self.Generator.Element.RawValue {
+    func optionsBitmask() -> Self.Iterator.Element.RawValue {
         
         let array = self.filter { (_) -> Bool in return true }
         
-        return Self.Generator.Element.optionsBitmask(array)
+        return Self.Iterator.Element.optionsBitmask(array)
     }
 }

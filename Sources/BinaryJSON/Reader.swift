@@ -10,7 +10,7 @@ import CBSON
 
 public extension BSON {
     
-    public final class Reader: GeneratorType {
+    public final class Reader: IteratorType {
         
         // MARK: - Private Properties
         
