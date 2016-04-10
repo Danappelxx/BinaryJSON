@@ -214,7 +214,7 @@ private extension BSON {
             let keyBuffer = bson_iter_key_unsafe(&iterator)
             
             let key = String(cString:keyBuffer)
-			
+
             let type = bson_iter_type_unsafe(&iterator)
             
             var value: BSON.Value?
@@ -234,7 +234,7 @@ private extension BSON {
                 let buffer = bson_iter_utf8_unsafe(&iterator, &length)
                 
                 let string = String(cString:buffer)
-				
+
                 value = .String(string)
                 
             case BSON_TYPE_DOCUMENT:
@@ -270,7 +270,7 @@ private extension BSON {
                 var length: UInt32 = 0
                 
                 let bufferPointer = UnsafeMutablePointer<UnsafePointer<UInt8>>(allocatingCapacity:1)
-				
+
                 bson_iter_binary(&iterator, &subtype, &length, bufferPointer)
                 
                 var bytes: [UInt8] = [UInt8](repeating: 0, count: Int(length))
@@ -333,7 +333,7 @@ private extension BSON {
             case BSON_TYPE_REGEX:
                 
                 let optionsBufferPointer = UnsafeMutablePointer<UnsafePointer<CChar>>(allocatingCapacity:1)
-				
+
                 let patternBuffer = bson_iter_regex(&iterator, optionsBufferPointer)
                 
                 let optionsBuffer = optionsBufferPointer.pointee
@@ -366,7 +366,7 @@ private extension BSON {
                 
                 let scopeBuffer = UnsafeMutablePointer<UnsafePointer<UInt8>>(allocatingCapacity:1)
                 
-				defer { scopeBuffer.deinitialize(); /*scopeBuffer.deallocCapacity(1) */ }
+                defer { scopeBuffer.deinitialize(); /*scopeBuffer.deallocCapacity(1) */ }
                 
                 let buffer = bson_iter_codewscope(&iterator, &codeLength, &scopeLength, scopeBuffer)
                 
