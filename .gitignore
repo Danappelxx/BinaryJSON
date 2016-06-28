@@ -1,7 +1,3 @@
 .build
 Packages
-Carthage
-
-Xcode/BinaryJSON.xcodeproj/project.xcworkspace/xcuserdata
-
-Xcode/BinaryJSON.xcodeproj/xcuserdata
+*.xcodeproj
